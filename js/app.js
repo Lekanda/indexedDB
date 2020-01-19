@@ -46,8 +46,25 @@ const form = document.querySelector('form'),
             objectStore.createIndex('fecha', 'fecha', { unique: false })
             objectStore.createIndex('hora', 'hora', { unique: false })
             objectStore.createIndex('sintomas', 'sintomasa', { unique: false })
-            console.log(objectStore.mascota);
-            console.log('Base de datos lista con sus campos');
+            // console.log(objectStore.mascota);
+            // console.log('Base de datos lista con sus campos');
+        }
+        // Listener al submit del formulario(todo)
+        form.addEventListener('submit', agregarDatos);
+
+        function agregarDatos (e) {
+            e.preventDefault();
+            // console.log('presionado');
+            const nuevaCita = {
+                mascota: nombreMascota.value,
+                cliente: nombreCliente.value,
+                telefono: telefono.value,
+                fecha: fecha.value,
+                hora: hora.value,
+                sintomas: sintomas.value
+            }
+            console.log(nuevaCita);
             
         }
     })
+    
