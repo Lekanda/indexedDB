@@ -1,6 +1,5 @@
 let DB;
 // Selectores de la interfaz
-
 const form = document.querySelector('form'),
       nombreMascota = document.querySelector('#mascota'),
       nombreCliente = document.querySelector('#cliente'),
@@ -38,14 +37,14 @@ const form = document.querySelector('form'),
             // console.log(db);
             // Definir el ObjectStore, 2 parametros, 1º nombre de BD y 2º opciones
             // KeyPath es el indice de la base de datos
-            let objectStore = db.createObjectStore('citas', { keyPath: 'key', autoincrement: true})
+            let objectStore = db.createObjectStore('citas', { keyPath: 'key', autoIncrement: true} );
             // Crear los indices y campos de la base de datos:1º Nombre; 2º keypath; 3º opciones
-            objectStore.createIndex('mascota', 'mascota', { unique: false })
-            objectStore.createIndex('cliente', 'cliente', { unique: false })
-            objectStore.createIndex('telefono', 'telefono', { unique: false })
-            objectStore.createIndex('fecha', 'fecha', { unique: false })
-            objectStore.createIndex('hora', 'hora', { unique: false })
-            objectStore.createIndex('sintomas', 'sintomasa', { unique: false })
+            objectStore.createIndex('mascota', 'mascota', { unique: false });
+            objectStore.createIndex('cliente', 'cliente', { unique: false });
+            objectStore.createIndex('telefono', 'telefono', { unique: false });
+            objectStore.createIndex('fecha', 'fecha', { unique: false });
+            objectStore.createIndex('hora', 'hora', { unique: false });
+            objectStore.createIndex('sintomas', 'sintomasa', { unique: false });
             // console.log(objectStore.mascota);
             // console.log('Base de datos lista con sus campos');
         }
@@ -62,8 +61,27 @@ const form = document.querySelector('form'),
                 fecha: fecha.value,
                 hora: hora.value,
                 sintomas: sintomas.value
+            };
+            // console.log(nuevaCita);
+            
+            // En Indexed se utilizan las transacciones para escribir datos
+            let transaction = DB.transaction(['citas'], 'readwrite');
+            let objectStore = transaction.objectStore('citas');
+            // console. log(objectStore);
+            let peticion = objectStore.add(nuevaCita);
+
+            // console.log(peticion);
+
+            peticion.onsuccess = () => {
+                form.reset();
             }
-            console.log(nuevaCita);
+            transaction.oncomplete = () => {
+                console.log('cita agregada');
+            }
+            transaction.onerror = () => {
+                console.log('HUbo un error');
+                
+            }
             
         }
     })
