@@ -1,7 +1,7 @@
-lte IDBOpenDBRequest;
+let IDBOpenDBRequest;
 // Selectores de la interfaz
 
-const form = document.querySelector('form'),
+const form = document.querySelector('form'),// form es un 'form'
       nombreMascota = document.querySelector('#mascota'),
       nombreCliente = document.querySelector('#cliente'),
       telefono = document.querySelector('#telefono'),
