@@ -91,8 +91,7 @@ const form = document.querySelector('form'),
             objectStore.openCursor().onsuccess = function(e) {
                 // cursor se va a ubicar en el registro indicado
                 let cursor = e.target.result;
-
-                console.log(cursor);
+                // console.log(cursor);
                 if (cursor) {
                     let citaHTML = document.createElement('li');
                     citaHTML.setAttribute('data-cita-id', cursor.value.key);
@@ -107,7 +106,19 @@ const form = document.querySelector('form'),
                     `;
                     // Append en el padre
                     citas.appendChild(citaHTML);
+                    // Consultar los proximos registros
                     cursor.continue();
+                } else {
+                    if (!citas.firstChild) {
+                        // Cuando no hay Registros.
+                        headingAdministra.textContent = 'Agrega citas para comenzar';
+                        let listado = document.createElement('p');
+                        listado.classList.add('text-center');
+                        listado.textContent ='No hay Registros';
+                        citas.appendChild(listado);
+                    } else {
+                        headingAdministra.textContent = 'Administra tus citas'
+                    }
                 }
             }
         }
