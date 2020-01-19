@@ -7,8 +7,8 @@ const form = document.querySelector('form'),
       fecha = document.querySelector('#fecha'),
       hora = document.querySelector('#hora'),
       sintomas = document.querySelector('#sintomas'),
+      citas = document.querySelector('#citas'),
       headingAdministra = document.querySelector('#administra');
-
 
 // Esperar al DOM
     document.addEventListener('DOMContentLoaded', () => {
@@ -21,17 +21,16 @@ const form = document.querySelector('form'),
         // Si todo esta bien entonces muestra en consola y asignar base de datos
         crearDB.onsuccess = function(){
             // console.log('todo listo');
-
             // Asignar a la base de datos
             DB = crearDB.result;
             // console.log(DB);
+
+            mostrarCitas();
         }
 
         // Este metodo solo corre una vez y es ideal para crear el schema de la BD. Sí la BD esta creada no la crea otra vez
         crearDB.onupgradeneeded = function (e){
             // console.log('Solo una vez');
-            // console.log(e);
-
             // el evento es la misma base de datos
             let db = e.target.result;
             // console.log(db);
@@ -67,9 +66,7 @@ const form = document.querySelector('form'),
             // En Indexed se utilizan las transacciones para escribir datos
             let transaction = DB.transaction(['citas'], 'readwrite');
             let objectStore = transaction.objectStore('citas');
-            // console. log(objectStore);
             let peticion = objectStore.add(nuevaCita);
-
             // console.log(peticion);
 
             peticion.onsuccess = () => {
@@ -80,9 +77,40 @@ const form = document.querySelector('form'),
             }
             transaction.onerror = () => {
                 console.log('HUbo un error');
+            }
+        }
+
+        function mostrarCitas() {
+            // Limpiar citas anteriores
+            while( citas.firstChild ) {
+                citas.removeChild(citas.firstChild);
+            }
+
+            // creamos Object Store
+            let objectStore = DB.transaction('citas').objectStore('citas');
+            // Esto retorna una peticion asincrona
+            objectStore.openCursor().onsuccess = function(e) {
+                // cursor se va a ubicar en el registro indicado
+                let cursor = e.target.result;
+
+                console.log(cursor);
+                if (cursor) {
+                    let citaHTML = document.createElement('li');
+                    citaHTML.setAttribute('data-cita-id', cursor.value.key);
+                    citaHTML.classList.add('list-group-item');
+
+                    citaHTML.innerHTML = `
+                    
+                    <p class="font-weight-bold">Mascota: <span class ="font-weight-normal">${cursor.value.mascota}</span></p>
+                    
+                    `;
+
+                    // Append en el padre
+                    citas.appendChild(citaHTML);
+                    cursor.continue();
+                }
                 
             }
-            
         }
     })
     
