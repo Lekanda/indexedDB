@@ -62,18 +62,17 @@ const form = document.querySelector('form'),
                 sintomas: sintomas.value
             };
             // console.log(nuevaCita);
-            
             // En Indexed se utilizan las transacciones para escribir datos
             let transaction = DB.transaction(['citas'], 'readwrite');
             let objectStore = transaction.objectStore('citas');
             let peticion = objectStore.add(nuevaCita);
             // console.log(peticion);
-
             peticion.onsuccess = () => {
                 form.reset();
             }
             transaction.oncomplete = () => {
-                console.log('cita agregada');
+                console.log('Cita Agregada !!');
+                mostrarCitas();
             }
             transaction.onerror = () => {
                 console.log('HUbo un error');
@@ -98,19 +97,18 @@ const form = document.querySelector('form'),
                     let citaHTML = document.createElement('li');
                     citaHTML.setAttribute('data-cita-id', cursor.value.key);
                     citaHTML.classList.add('list-group-item');
-
                     citaHTML.innerHTML = `
-                    
                     <p class="font-weight-bold">Mascota: <span class ="font-weight-normal">${cursor.value.mascota}</span></p>
-                    
+                    <p class="font-weight-bold">Cliente: <span class ="font-weight-normal">${cursor.value.cliente}</span></p>
+                    <p class="font-weight-bold">Telefono: <span class ="font-weight-normal">${cursor.value.telefono}</span></p>
+                    <p class="font-weight-bold">Fecha: <span class ="font-weight-normal">${cursor.value.fecha}</span></p>
+                    <p class="font-weight-bold">Hora: <span class ="font-weight-normal">${cursor.value.hora}</span></p>
+                    <p class="font-weight-bold">Sintomas: <span class ="font-weight-normal">${cursor.value.sintomas}</span></p>
                     `;
-
                     // Append en el padre
                     citas.appendChild(citaHTML);
                     cursor.continue();
                 }
-                
             }
         }
-    })
-    
+    })   
