@@ -131,7 +131,29 @@ const form = document.querySelector('form'),
         }
 
         function borrarCita (e) {
-            console.log(e.target.parentElement.getAttribute('data-cita-id') );
-            
+            // console.log(e.target.parentElement.getAttribute('data-cita-id') );
+            let citaID = Number(e.target.parentElement.getAttribute('data-cita-id'));
+
+            // En Indexed se utilizan las transacciones para escribir, leer y borrar datos.
+            let transaction = DB.transaction(['citas'], 'readwrite');
+            let objectStore = transaction.objectStore('citas');
+            // console.log(objectStore);
+            let peticion = objectStore.delete(citaID);
+            // Quitar del DOM
+            transaction.oncomplete = () => {
+                e.target.parentElement.parentElement.removeChild(e.target.parentElement);
+                console.log(`Se elimino la cita con el ID: ${citaID}`);
+                
+                if (!citas.firstChild) {
+                    // Cuando no hay Registros.
+                    headingAdministra.textContent = 'Agrega citas para comenzar';
+                    let listado = document.createElement('p');
+                    listado.classList.add('text-center');
+                    listado.textContent ='No hay Registros';
+                    citas.appendChild(listado);
+                } else {
+                    headingAdministra.textContent = 'Administra tus citas'
+                }
+            }
         }
     })   
