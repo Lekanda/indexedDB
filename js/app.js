@@ -104,6 +104,13 @@ const form = document.querySelector('form'),
                     <p class="font-weight-bold">Hora: <span class ="font-weight-normal">${cursor.value.hora}</span></p>
                     <p class="font-weight-bold">Sintomas: <span class ="font-weight-normal">${cursor.value.sintomas}</span></p>
                     `;
+
+                    // Crear el boton de borrar con createElement
+                    const botonBorrar = document.createElement('button');
+                    botonBorrar.classList.add('borrar', 'btn', 'btn-danger');
+                    botonBorrar.innerHTML = '<span aria -hidden = "true">X</span> Borrar';
+                    botonBorrar.onclick = borrarCita;
+                    citaHTML.appendChild(botonBorrar);
                     // Append en el padre
                     citas.appendChild(citaHTML);
                     // Consultar los proximos registros
@@ -121,5 +128,10 @@ const form = document.querySelector('form'),
                     }
                 }
             }
+        }
+
+        function borrarCita (e) {
+            console.log(e.target.parentElement.getAttribute('data-cita-id') );
+            
         }
     })   
